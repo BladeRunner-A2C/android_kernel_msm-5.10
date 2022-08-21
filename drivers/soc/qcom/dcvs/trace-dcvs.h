@@ -382,7 +382,7 @@ TRACE_EVENT(bwprof_last_sample_meas,
 #endif /* _TRACE_DCVS_H */
 
 #undef TRACE_INCLUDE_PATH
-#define TRACE_INCLUDE_PATH .
+#define TRACE_INCLUDE_PATH ../drivers/soc/qcom/dcvs
 
 #undef TRACE_INCLUDE_FILE
 #define TRACE_INCLUDE_FILE trace-dcvs
