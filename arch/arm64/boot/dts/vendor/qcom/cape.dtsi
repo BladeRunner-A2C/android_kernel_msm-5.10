@@ -3175,6 +3175,10 @@
 #include "cape-pcie.dtsi"
 #include "msm-rdbg.dtsi"
 #include "ipcc-test.dtsi"
+#include "camera/cape-camera.dtsi"
+#include "mmrm/cape-mmrm.dtsi"
+#include "audio/waipio-audio.dtsi"
+#include "video/waipio-vidc.dtsi"
 
 &qupv3_se7_2uart {
 	status = "ok";
