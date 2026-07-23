@@ -6,6 +6,7 @@
 
 import subprocess
 import sys
+import time
 import xml.etree.ElementTree as ET
 
 import requests
@@ -41,6 +42,22 @@ separated_techpacks = {
 }
 
 
+# Retry on transient failures (5xx, timeouts, etc), 404 means it's actually gone
+def get(url):
+    response = None
+    for _ in range(5):
+        try:
+            response = requests.get(url, timeout=10)
+        except requests.RequestException as e:
+            print('Request failed:', e, '- retrying...')
+            continue
+        if response.status_code in (200, 404):
+            return response
+        print('Got HTTP', response.status_code, '- retrying...')
+        time.sleep(2)
+    return response
+
+
 # Input revision from user - fallback
 # for that facepalm moment when they forget to release a manifest xml
 def get_revision_from_user():
@@ -53,7 +70,7 @@ def get_revision_from_manifest(tag, path, techpack=None):
     if techpack is None:
         root = manifest_root
     else:
-        response = requests.get(
+        response = get(
             f'https://git.codelinaro.org/clo/la/techpack/{techpack}/manifest/-/raw/release/{tag}.xml'
         )
         if response.status_code != 200:
@@ -99,7 +116,7 @@ def get_revision(path):
 
 
 # HERE IT BEGINS
-response = requests.get(
+response = get(
     f'https://git.codelinaro.org/clo/la/la/vendor/manifest/-/raw/release/{tag}.xml'
 )
 if response.status_code != 200:
